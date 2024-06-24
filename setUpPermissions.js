@@ -40,6 +40,13 @@ async function setupPermissions() {
         name: 'Guest',
         permissions: [],
       },
+      developer: {
+        name: 'Developer',
+        permissions: [
+          'invite-member',
+          'list-members',
+        ],
+      },
     },
   });
 
@@ -80,6 +87,14 @@ async function setupPermissions() {
       guest: {
         name: 'Guest',
         permissions: [
+          'view-product',
+        ],
+      },
+      developer: {
+        name: 'Developer',
+        permissions: [
+          'create-product',
+          'edit-product',
           'view-product',
         ],
       },
@@ -127,49 +142,51 @@ async function setupPermissions() {
           'view-post',
         ],
       },
+      developer: {
+        name: 'Developer',
+        permissions: [
+          'create-post',
+          'edit-post',
+          'view-post',
+        ],
+      },
     },
   });
 
-  // Create Users and Assign Roles
-  await permit.api.createUser({
-    key: 'admin_user',
-    email: 'admin@example.com',
-    roles: {
-      'account': 'admin',
-      'product': 'admin',
-      'post': 'admin'
-    },
+  // Create Users and Assign Roles with correct resource_instance format
+  await permit.api.syncUser({ key: 'admin_user' });
+  await permit.api.syncUser({ key: 'manager_user' });
+  await permit.api.syncUser({ key: 'customer_user' });
+  await permit.api.syncUser({ key: 'guest_user' });
+  await permit.api.syncUser({ key: 'developer_user' });
+
+  await permit.api.roleAssignments.assign({
+    user: 'admin_user',
+    role: 'admin',
+    resource_instance: 'account:default',
+  });
+  await permit.api.roleAssignments.assign({
+    user: 'manager_user',
+    role: 'manager',
+    resource_instance: 'account:default',
+  });
+  await permit.api.roleAssignments.assign({
+    user: 'customer_user',
+    role: 'customer',
+    resource_instance: 'account:default',
+  });
+  await permit.api.roleAssignments.assign({
+    user: 'guest_user',
+    role: 'guest',
+    resource_instance: 'account:default',
+  });
+  await permit.api.roleAssignments.assign({
+    user: 'developer_user',
+    role: 'developer',
+    resource_instance: 'account:default',
   });
 
-  await permit.api.createUser({
-    key: 'manager_user',
-    email: 'manager@example.com',
-    roles: {
-      'account': 'manager',
-      'product': 'manager',
-      'post': 'manager'
-    },
-  });
-
-  await permit.api.createUser({
-    key: 'customer_user',
-    email: 'customer@example.com',
-    roles: {
-      'account': 'customer',
-      'product': 'customer',
-      'post': 'customer'
-    },
-  });
-
-  await permit.api.createUser({
-    key: 'guest_user',
-    email: 'guest@example.com',
-    roles: {
-      'account': 'guest',
-      'product': 'guest',
-      'post': 'guest'
-    },
-  });
+  console.log("Permissions setup complete");
 }
 
 setupPermissions().catch(console.error);

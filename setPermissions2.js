@@ -2,7 +2,7 @@ const { Permit } = require('permitio'); // Correctly importing Permit class
 
 const permit = new Permit({
   pdp: 'https://api.permit.io',
-  token: 'YOUR_PERMIT_API_TOKEN' // Replace with your actual Permit API token
+  token: 'B7CHT6u2r6uqhQ94vYZpDACr6M7UnK6CHjQjHFRcBXMUSveDVJiggKNcs8QKczL52DuWG2kIuXM6ma5MkIZjVR' // Replace with your actual Permit API token
 });
 
 const resources = [
